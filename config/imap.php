@@ -168,7 +168,7 @@ return [
             'attachment' => 'utf-8' // mimeheader
         ],
         'open' => [
-            // 'DISABLE_AUTHENTICATOR' => 'GSSAPI'
+            'DISABLE_AUTHENTICATOR' => 'GSSAPI'
         ]
     ],
 

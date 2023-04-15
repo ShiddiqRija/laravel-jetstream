@@ -29,117 +29,56 @@
 
         <div class="w-full">
             <div class="bg-white shadow-md rounded-lg py-4 ml-10">
-                <ul class="message-list">
+                <!-- <ul class="message-list">
 
+                    @foreach($messages as $message)
                     <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
+                        <li class="unread flex items-center hover:bg-gray-300 py-3 px-4">
 
                             <div class="flex items-center">
                                 <div class="checkbox-wrapper-mail mr-2">
                                     <input type="checkbox" id="chk19" />
                                     <label for="chk19" class="toggle"></label>
                                 </div>
-                                <span class="font-medium">Peter, me (3)</span>
+                                <span class="font-small text-sm">{{ substr($message->getFrom()[0]->personal, 0, 20) }}</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
+                                <span class="font-medium text-sm">{{ substr($message->getSubject(), 0, 25) }} &nbsp;–&nbsp;</span>
+                                <span class="text-gray-500 text-sm">{{ substr($message->mailText, 0, 100) }}</span>
+                                <span class="text-gray-500 text-sm"> </span>
                             </div>
+
                         </li>
                     </a>
+                    @endforeach
 
-                    <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
+                </ul> -->
 
-                            <div class="flex items-center">
-                                <div class="checkbox-wrapper-mail mr-2">
-                                    <input type="checkbox" id="chk19" />
-                                    <label for="chk19" class="toggle"></label>
-                                </div>
-                                <span class="font-medium">Peter, me (3)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
-                            </div>
-                        </li>
-                    </a>
-
-                    <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
-
-                            <div class="flex items-center">
-                                <div class="checkbox-wrapper-mail mr-2">
-                                    <input type="checkbox" id="chk19" />
-                                    <label for="chk19" class="toggle"></label>
-                                </div>
-                                <span class="font-medium">Peter, me (3)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
-                            </div>
-                        </li>
-                    </a>
-
-                    <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
-
-                            <div class="flex items-center">
-                                <div class="checkbox-wrapper-mail mr-2">
-                                    <input type="checkbox" id="chk19" />
-                                    <label for="chk19" class="toggle"></label>
-                                </div>
-                                <span class="font-medium">Peter, me (3)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
-                            </div>
-                        </li>
-                    </a>
-
-                    <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
-
-                            <div class="flex items-center">
-                                <div class="checkbox-wrapper-mail mr-2">
-                                    <input type="checkbox" id="chk19" />
-                                    <label for="chk19" class="toggle"></label>
-                                </div>
-                                <span class="font-medium">Peter, me (3)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
-                            </div>
-                        </li>
-                    </a>
-
-                    <a href="#">
-                        <li class="unread flex items-center justify-between hover:bg-gray-300 py-3 px-4">
-
-                            <div class="flex items-center">
-                                <div class="checkbox-wrapper-mail mr-2">
-                                    <input type="checkbox" id="chk19" />
-                                    <label for="chk19" class="toggle"></label>
-                                </div>
-                                <span class="font-medium">Peter, me (3)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="font-medium">Hello &nbsp;–&nbsp;</span>
-                                <span class="text-gray-500">Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)</span>
-                                <span class="ml-2 text-gray-500">Mar 6</span>
-                            </div>
-                        </li>
-                    </a>
-
-                </ul>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($messages as $message)
+                        <a href="#">
+                            <tr class="hover:bg-gray-300">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="checkbox-wrapper-mail mr-2">
+                                            <input type="checkbox" id="chk19" />
+                                            <label for="chk19" class="toggle"></label>
+                                        </div>
+                                        <span class="font-small text-sm">{{ substr($message->getFrom()[0]->personal, 0, 20) }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span class="font-medium text-sm">{{ substr($message->getSubject(), 0, 25) }} &nbsp;–&nbsp;</span>
+                                        <span class="text-gray-500 text-sm">{{ substr($message->mailText, 0, 100) }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </a>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             <div class="flex items-center justify-between mt-3 ml-10">
