@@ -35,9 +35,9 @@
                         @if($messages->count() > 0)
                         @foreach($messages as $message)
                         <tr wire:click="openEmail({{ $message->uid }})" class="hover:bg-gray-300 cursor-pointer">
-                            <td class="px-4 py-2 font-medium text-sm w-2/12">{{ substr($message->getFrom()[0]->personal, 0, 20) }}</td>
-                            <td class="px-4 py-2 text-sm w-9/12">{!! substr($message->getSubject() . ' &nbsp;&ndash;&nbsp; <span class="text-gray-600">' . $message->mailText, 0, 140) . '...' . '</span>'!!}</td>
-                            <td class="px-4 py-2 text-sm w-1/12 text-right">{{ $message->date }}</td>
+                            <td class="px-2 py-2 font-medium text-sm w-2/12">{{ substr($message->getFrom()[0]->personal, 0, 19) }}</td>
+                            <td class="px-2 py-2 text-sm w-8/12">{!! substr($message->getSubject() . ' &nbsp;&ndash;&nbsp; <span class="text-gray-600">' . $message->mailText, 0, 140) . '...' . '</span>'!!}</td>
+                            <td class="px-2 py-2 text-sm w-1/12 text-right">{{ $message->date }}</td>
                         </tr>
                         @endforeach
                         @else
