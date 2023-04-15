@@ -38,12 +38,13 @@ Route::middleware([
     Route::get('/mailbox/trash', Trash::class)->name('mailbox.trash');
 
     Route::get('/testing', function () {
-        $cm = new ClientManager($options = []);
+        $cm = new ClientManager($options = [
+            'fetch_order' => 'desc',
+        ]);
 
         /** @var \Webklex\PHPIMAP\Client $client */
         $client = $cm->account('default');
 
-        // or create a new instance manually
         $client = $cm->make([
             'host'          => 'imap.gmail.com',
             'port'          => 993,
@@ -54,30 +55,26 @@ Route::middleware([
             'protocol'      => 'imap'
         ]);
 
+        // $client = Client::account('default');
+
         //Connect to the IMAP Server
         $client->connect();
 
-        // //Get all Mailboxes
-        // /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folders = $client->getFolders();
+        //Get all Mailboxes
+        /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
+        $folder = $client->getFolder('INBOX');
 
-        echo $folders;
-        // $oFolder = $client->getFolder('INBOX');
-
-        // $aMessage = $oFolder->query()->since('15.04.2023')->get();
-
-        // foreach ($aMessage as $oMessage) {
-        //     echo $oMessage->getFrom() . '<br />';
-        //     echo $oMessage->getFrom()[0]->mail . '<br />';
-        //     echo $oMessage->getSubject() . '<br />';
-        //     echo strip_tags($oMessage->getHTMLBody(true)).'<br />';
-        //     echo '<br />';
-        //     $text = strip_tags($oMessage->getHTMLBody(true));
-        //     $text = preg_replace('/\..+?\{.+?\}|@media.+?\{.+?\}/s', '', $text);
-        //     echo $text . '<br />';
-        //     echo '<br />';
-        //     echo $oMessage->getHTMLBody(true);
-        // }
+        // $getEmail = $folder->query()->setFetchOrder("desc")->since('06.02.2023')->get();
+        // // $fetchOrder = $getEmail->;
+        // $messages = $fetchOrder->paginate();
+        $aMessage = $folder->query()->all()->limit(10)->fetchOrderAsc()->get();
+        // $aMessage = $folder->query()->since('01.04.2023')->fetchOrderDesc()->get()->paginate();
+        // $aMessage = $aMessage->fetchOrderDesc();
+        // $paginator = $oFolder->query()->paginate();
+        // $aMessage = $aMessage->sortBy($aMessage->uid, 'desc');
+        foreach ($aMessage as $oMessage) {
+            echo $oMessage->date." ".$oMessage->uid." ".$oMessage->msgn."\n";
+        }
 
         // //Loop through every Mailbox
         // /** @var \Webklex\PHPIMAP\Folder $folder */

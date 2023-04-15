@@ -3,28 +3,22 @@
 namespace App\Http\Livewire\Mailbox;
 
 use Livewire\Component;
-use Webklex\PHPIMAP\ClientManager;
+use Webklex\IMAP\Facades\Client;
 
 class Inbox extends Component
 {
+    public $pesan = "";
+
+    public function render()
+    {
+        return view('livewire.mailbox.index', [
+            'messages' => $this->getMail()
+        ]);
+    }
 
     public function getMail()
     {
-        $cm = new ClientManager($options = []);
-
-        /** @var \Webklex\PHPIMAP\Client $client */
-        $client = $cm->account('default');
-
-        // or create a new instance manually
-        $client = $cm->make([
-            'host'          => 'imap.gmail.com',
-            'port'          => 993,
-            'encryption'    => 'ssl',
-            'validate_cert' => true,
-            'username'      => 'gabungyou@gmail.com',
-            'password'      => 'cgprppwexhhspsbu',
-            'protocol'      => 'imap'
-        ]);
+        $client = Client::account('default');
 
         //Connect to the IMAP Server
         $client->connect();
@@ -33,20 +27,22 @@ class Inbox extends Component
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
         $folder = $client->getFolder('INBOX');
 
-        $messages = $folder->query()->since('15.04.2023')->get();
+        $messages = $folder->query()->since('01.01.2023')->get()->reverse()->paginate();
 
         foreach ($messages as $m) {
-            $m->mailText = strip_tags($m->getHTMLBody(true));
-            $m->mailText = preg_replace('/\..+?\{.+?\}|@media.+?\{.+?\}/s', '', $m->mailText);
+            $m->mailText = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '',  $m->getHTMLBody(true));
+            $m->mailText = strip_tags($m->mailText);
+
+            $m->date = $m->getDate();
+            $m->date = strtotime($m->date);
+            $m->date = date('j M', $m->date);
         }
 
         return $messages;
     }
-
-    public function render()
+    
+    public function openEmail($emailID)
     {
-        return view('livewire.mailbox.inbox', [
-            'messages' => $this->getMail()
-        ]);
+        $this->pesan = "Email Id : ". $emailID; 
     }
 }
