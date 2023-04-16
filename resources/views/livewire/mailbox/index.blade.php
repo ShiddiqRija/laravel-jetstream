@@ -42,7 +42,7 @@
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="2" class="font-medium text-sm">No Email</td>
+                            <td colspan="2" class="font-medium text-center text-large">No Email</td>
                         </tr>
                         @endif
                     </tbody>

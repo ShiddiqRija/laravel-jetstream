@@ -25,7 +25,7 @@ class Trash extends Component
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolder('INBOX');
+        $folder = $client->getFolderByName('Trash');
 
         $messages = $folder->query()->since('03.03.2023')->get()->reverse()->paginate();
 

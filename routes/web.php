@@ -47,20 +47,19 @@ Route::middleware([
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolder('INBOX');
+        // $folders = $client->getFolders();
+        $folder = $client->getFolderByName('Drafts');
 
-        $messages = $folder->query()->getMessage(6337);
+        $messages = $folder->query()->all()->get();
 
-        // dd($messages);
-        // Pencocokan pola untuk tag HTML dan tag style/CSS
-        preg_match_all('/<html.*?>(.*?)<\/html>|<style.*?>(.*?)<\/style>/s', $messages->getHTMLBody(), $matches);
+        // foreach($folders as $folder) {
+        //     echo $folder->name;
+        // }
 
-        // Variabel untuk menampung tag HTML dan tag style/CSS
-        $htmlContent = $matches[1][0];
-        $cssContent = $matches[2][0];
+        dd($messages);
 
-        echo $htmlContent;
-        echo $cssContent;
-        // return $messages->getBodies();
+        // $messages = $folder->query()->getMessage(6337);
+
+        
     });
 });
