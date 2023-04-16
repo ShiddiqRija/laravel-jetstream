@@ -44,7 +44,7 @@
                     <hr />
                 </div>
 
-                <div wire:ignore id="email-view" class="mt-3">
+                <div id="email-view" class="mt-3">
                 </div>
 
             </div>
