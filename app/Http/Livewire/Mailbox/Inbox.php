@@ -10,7 +10,8 @@ class Inbox extends Component
     public function render()
     {
         return view('livewire.mailbox.index', [
-            'messages' => $this->getMail()
+            'messages' => $this->getMail(),
+            'folder' => 'inbox'
         ]);
     }
 
@@ -23,7 +24,7 @@ class Inbox extends Component
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolder('INBOX');
+        $folder = $client->getFolderByName('INBOX');
 
         $messages = $folder->query()->since('01.01.2023')->get()->reverse()->paginate();
 
@@ -39,8 +40,9 @@ class Inbox extends Component
         return $messages;
     }
     
-    public function openEmail($emailId)
+    public function openEmail($folder, $id)
     {
-        return redirect()->to("/mailbox/inbox/$emailId");
+        $url = route('mailbox.show', compact('folder', 'id'));
+        return redirect()->to($url);
     }
 }

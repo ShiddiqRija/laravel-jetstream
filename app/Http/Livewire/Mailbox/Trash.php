@@ -7,12 +7,11 @@ use Webklex\IMAP\Facades\Client;
 
 class Trash extends Component
 {
-    public $pesan = "";
-
     public function render()
     {
         return view('livewire.mailbox.index', [
-            'messages' => $this->getMail()
+            'messages' => $this->getMail(),
+            'folder' =>  'sent-mail'
         ]);
     }
 
@@ -41,8 +40,9 @@ class Trash extends Component
         return $messages;
     }
 
-    public function openEmail($emailID)
+    public function openEmail($folder, $id)
     {
-        $this->pesan = "Email Id : " . $emailID;
+        $url = route('mailbox.show', compact('folder', 'id'));
+        return redirect()->to($url);
     }
 }

@@ -2,12 +2,11 @@
 
 use App\Http\Livewire\Mailbox\Draft;
 use App\Http\Livewire\Mailbox\Inbox;
-use App\Http\Livewire\Mailbox\SendMail;
+use App\Http\Livewire\Mailbox\SentMail;
 use App\Http\Livewire\Mailbox\Show;
 use App\Http\Livewire\Mailbox\Trash;
 use Illuminate\Support\Facades\Route;
 use Webklex\IMAP\Facades\Client;
-use Webklex\PHPIMAP\ClientManager;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,32 +33,8 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/mailbox/inbox', Inbox::class)->name('mailbox.inbox');
-    Route::get('/mailbox/inbox/{id}', Show::class)->name('mailbox.inbox.show');
-    Route::get('/mailbox/draft', Draft::class)->name('mailbox.draft');
-    Route::get('/mailbox/send-mail', SendMail::class)->name('mailbox.send-mail');
+    Route::get('/mailbox/drafts', Draft::class)->name('mailbox.drafts');
+    Route::get('/mailbox/send-mail', SentMail::class)->name('mailbox.send-mail');
     Route::get('/mailbox/trash', Trash::class)->name('mailbox.trash');
-
-    Route::get('/testing', function () {
-        $client = Client::account('default');
-
-        //Connect to the IMAP Server
-        $client->connect();
-
-        //Get all Mailboxes
-        /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        // $folders = $client->getFolders();
-        $folder = $client->getFolderByName('Drafts');
-
-        $messages = $folder->query()->all()->get();
-
-        // foreach($folders as $folder) {
-        //     echo $folder->name;
-        // }
-
-        dd($messages);
-
-        // $messages = $folder->query()->getMessage(6337);
-
-        
-    });
+    Route::get('/mailbox/{folder}/{id}', Show::class)->name('mailbox.show');
 });

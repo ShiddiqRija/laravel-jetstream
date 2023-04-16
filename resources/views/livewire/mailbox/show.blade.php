@@ -15,13 +15,13 @@
                 <x-mail-nav-link href="{{ route('mailbox.inbox') }}" :active="request()->routeIs('mailbox.inbox.*')">
                     {{ __('Inbox') }}
                 </x-mail-nav-link>
-                <x-mail-nav-link href="{{ route('mailbox.draft') }}" :active="request()->routeIs('mailbox.draft')">
+                <x-mail-nav-link href="{{ route('mailbox.drafts') }}" :active="request()->routeIs('mailbox.drafts.*')">
                     {{ __('Draft') }}
                 </x-mail-nav-link>
-                <x-mail-nav-link href="{{ route('mailbox.send-mail') }}" :active="request()->routeIs('mailbox.send-mail')">
+                <x-mail-nav-link href="{{ route('mailbox.send-mail') }}" :active="request()->routeIs('mailbox.send-mail.*')">
                     {{ __('Send Mail') }}
                 </x-mail-nav-link>
-                <x-mail-nav-link href="{{ route('mailbox.trash') }}" :active="request()->routeIs('mailbox.trash')">
+                <x-mail-nav-link href="{{ route('mailbox.trash') }}" :active="request()->routeIs('mailbox.trash.*')">
                     {{ __('Trash') }}
                 </x-mail-nav-link>
             </div>

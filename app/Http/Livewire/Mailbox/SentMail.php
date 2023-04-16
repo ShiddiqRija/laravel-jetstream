@@ -2,18 +2,21 @@
 
 namespace App\Http\Livewire\Mailbox;
 
+use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 use Webklex\IMAP\Facades\Client;
 
-class SendMail extends Component
+class SentMail extends Component
 {
-    public $pesan = "";
+    public function mount() {
 
+    }
 
     public function render()
     {
         return view('livewire.mailbox.index', [
-            'messages' => $this->getMail()
+            'messages' => $this->getMail(),
+            'folder' =>  'sent-mail'
         ]);
     }
 
@@ -42,8 +45,9 @@ class SendMail extends Component
         return $messages;
     }
 
-    public function openEmail($emailID)
+    public function openEmail($folder, $id)
     {
-        $this->pesan = "Email Id : " . $emailID;
+        $url = route('mailbox.show', compact('folder', 'id'));
+        return redirect()->to($url);
     }
 }
