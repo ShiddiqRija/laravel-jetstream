@@ -7,8 +7,6 @@ use Webklex\IMAP\Facades\Client;
 
 class Inbox extends Component
 {
-    public $pesan = "";
-
     public function render()
     {
         return view('livewire.mailbox.index', [
@@ -41,8 +39,8 @@ class Inbox extends Component
         return $messages;
     }
     
-    public function openEmail($emailID)
+    public function openEmail($emailId)
     {
-        $this->pesan = "Email Id : ". $emailID; 
+        return redirect()->to("/mailbox/inbox/$emailId");
     }
 }
