@@ -44,8 +44,7 @@
                     <hr />
                 </div>
 
-                <div class="mt-3">
-                    {!! $mailBody !!}
+                <div wire:ignore id="email-view" class="mt-3">
                 </div>
 
             </div>
@@ -53,3 +52,26 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function displayData(dataHtml) {
+        var container = document.querySelector('#email-view');
+        var shadow = container.attachShadow({
+            mode: 'open'
+        });
+
+        var style = document.createElement('style');
+        style.textContent = dataCss;
+        shadow.appendChild(style);
+
+        var html = document.createElement('div');
+        html.innerHTML = dataHtml;
+        shadow.appendChild(html);
+    }
+
+    var dataHtml = `{!! $htmlEmail !!}`;
+    var dataCss = `{!! $cssEmail !!}`;
+    displayData(dataHtml, dataCss);
+    console.log('jalan')
+</script>

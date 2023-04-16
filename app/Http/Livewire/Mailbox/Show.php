@@ -10,6 +10,8 @@ class Show extends Component
     private $subject = '';
     private $sender = '';
     private $mailBody = '';
+    private $htmlEmail = '';
+    private $cssEmail = '';
 
     public function mount($id)
     {
@@ -24,18 +26,18 @@ class Show extends Component
 
         $messages = $folder->query()->getMessage($uid = $id);
 
-        // foreach ($messages as $m) {
-        //     $m->mailText = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '',  $m->getHTMLBody(true));
-        //     $m->mailText = strip_tags($m->mailText);
+        // Pencocokan pola untuk tag HTML dan tag style/CSS
+        preg_match_all('/<html.*?>(.*?)<\/html>|<style.*?>(.*?)<\/style>/s', $messages->getHTMLBody(), $matches);
 
-        //     $m->date = $m->getDate();
-        //     $m->date = strtotime($m->date);
-        //     $m->date = date('j M', $m->date);
-        // }
+        // Variabel untuk menampung tag HTML dan tag style/CSS
+        $htmlContent = $matches[1][0];
+        $cssContent = $matches[2][0];
 
         $this->subject = $messages->getSubject();
         $this->sender = $messages->getFrom();
         $this->mailBody = $messages->getHTMLBody();
+        $this->htmlEmail = $htmlContent;
+        $this->cssEmail = $cssContent;
     }
 
     public function render()
@@ -44,6 +46,8 @@ class Show extends Component
             'subject' => $this->subject,
             'sender' => $this->sender,
             'mailBody' => $this->mailBody,
+            'htmlEmail' => $this->htmlEmail,
+            'cssEmail' => $this->cssEmail,
         ]);
     }
 }
