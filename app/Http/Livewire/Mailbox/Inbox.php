@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mailbox;
 
 use Livewire\Component;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\ClientManager;
 
 class Inbox extends Component
 {
@@ -17,16 +18,26 @@ class Inbox extends Component
 
     public function getMail()
     {
-        $client = Client::account('default');
+        $cm = new ClientManager($options = []);
+
+        $client = $cm->make([
+            'host'          => 'outlook.office365.com',
+            'port'          => 993,
+            'encryption'    => 'tls',
+            'validate_cert' => true,
+            'username'      => Auth()->user()->email,
+            'password'      => Auth()->user()->imap_password,
+            'protocol'      => 'imap'
+        ]);
 
         //Connect to the IMAP Server
         $client->connect();
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolderByName('INBOX');
+        $folder = $client->getFolderByName('Inbox');
 
-        $messages = $folder->query()->since('01.01.2023')->get()->reverse()->paginate();
+        $messages = $folder->query()->all()->get()->reverse()->paginate();
 
         foreach ($messages as $m) {
             $m->mailText = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '',  $m->getHTMLBody(true));

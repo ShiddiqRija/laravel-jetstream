@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mailbox;
 
 use Livewire\Component;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\ClientManager;
 
 class Trash extends Component
 {
@@ -11,20 +12,30 @@ class Trash extends Component
     {
         return view('livewire.mailbox.index', [
             'messages' => $this->getMail(),
-            'folder' =>  'sent-mail'
+            'folder' =>  'trash'
         ]);
     }
 
     public function getMail()
     {
-        $client = Client::account('default');
+        $cm = new ClientManager($options = []);
+
+        $client = $cm->make([
+            'host'          => 'outlook.office365.com',
+            'port'          => 993,
+            'encryption'    => 'tls',
+            'validate_cert' => true,
+            'username'      => Auth()->user()->email,
+            'password'      => Auth()->user()->imap_password,
+            'protocol'      => 'imap'
+        ]);
 
         //Connect to the IMAP Server
         $client->connect();
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolderByName('Trash');
+        $folder = $client->getFolderByName('Deleted');
 
         $messages = $folder->query()->since('03.03.2023')->get()->reverse()->paginate();
 

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mailbox;
 
 use Livewire\Component;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\ClientManager;
 
 class Show extends Component
 {
@@ -14,15 +15,25 @@ class Show extends Component
 
     public function mount($folder, $id)
     {
-        $client = Client::account('default');
+        $cm = new ClientManager($options = []);
+
+        $client = $cm->make([
+            'host'          => 'outlook.office365.com',
+            'port'          => 993,
+            'encryption'    => 'tls',
+            'validate_cert' => true,
+            'username'      => Auth()->user()->email,
+            'password'      => Auth()->user()->imap_password,
+            'protocol'      => 'imap'
+        ]);
 
         //Connect to the IMAP Server
         $client->connect();
 
-        if ($folder == 'inbox') $folder = 'INBOX';
+        if ($folder == 'inbox') $folder = 'inbox';
         if ($folder == 'drafts') $folder = 'Drafts';
-        if ($folder == 'sent-mail') $folder = 'Sent Mail';
-        if ($folder == 'trash') $folder = 'Trash';
+        if ($folder == 'sent-mail') $folder = 'Sent';
+        if ($folder == 'trash') $folder = 'Deleted';
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */

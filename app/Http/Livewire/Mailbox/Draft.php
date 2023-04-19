@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mailbox;
 
 use Livewire\Component;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\ClientManager;
 
 class Draft extends Component
 {
@@ -17,7 +18,17 @@ class Draft extends Component
 
     public function getMail()
     {
-        $client = Client::account('default');
+        $cm = new ClientManager($options = []);
+
+        $client = $cm->make([
+            'host'          => 'outlook.office365.com',
+            'port'          => 993,
+            'encryption'    => 'tls',
+            'validate_cert' => true,
+            'username'      => Auth()->user()->email,
+            'password'      => Auth()->user()->imap_password,
+            'protocol'      => 'imap'
+        ]);
 
         //Connect to the IMAP Server
         $client->connect();
