@@ -30,7 +30,7 @@ class Show extends Component
         //Connect to the IMAP Server
         $client->connect();
 
-        if ($folder == 'inbox') $folder = 'inbox';
+        if ($folder == 'inbox') $folder = 'Inbox';
         if ($folder == 'drafts') $folder = 'Drafts';
         if ($folder == 'sent-mail') $folder = 'Sent';
         if ($folder == 'trash') $folder = 'Deleted';
