@@ -29,6 +29,7 @@ class CreateNewUser implements CreatesNewUsers
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
+            'imap_host' => 'outlook.office365.com',
             'password' => Hash::make($input['password']),
         ]);
     }

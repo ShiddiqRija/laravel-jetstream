@@ -21,9 +21,9 @@ class Trash extends Component
         $cm = new ClientManager($options = []);
 
         $client = $cm->make([
-            'host'          => 'outlook.office365.com',
+            'host'          => Auth()->user()->imap_host,
             'port'          => 993,
-            'encryption'    => 'tls',
+            'encryption'    => 'ssl',
             'validate_cert' => true,
             'username'      => Auth()->user()->email,
             'password'      => Auth()->user()->imap_password,

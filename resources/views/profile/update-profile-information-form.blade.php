@@ -78,11 +78,6 @@
             @endif
         </div>
 
-        <div class="col-span-6 sm:col-span-4">
-            <x-label for="imap_password" value="{{ __('IMAP Password') }}" />
-            <x-input id="imap_password" type="text" class="mt-1 block w-full" wire:model.defer="state.imap_password" autocomplete="imap-password" />
-            <x-input-error for="imap_password" class="mt-2" />
-        </div>
     </x-slot>
 
     <x-slot name="actions">
