@@ -1,14 +1,17 @@
 <?php
 
+use App\Events\GetNewEmailEvent;
 use App\Http\Livewire\Mailbox\Draft;
 use App\Http\Livewire\Mailbox\Inbox;
 use App\Http\Livewire\Mailbox\SentMail;
 use App\Http\Livewire\Mailbox\Show;
 use App\Http\Livewire\Mailbox\Trash;
+use App\Jobs\ConnecToIMAP;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Webklex\IMAP\Facades\Client;
 use Webklex\PHPIMAP\ClientManager;
+use Webklex\PHPIMAP\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +43,11 @@ Route::middleware([
     Route::get('/mailbox/trash', Trash::class)->name('mailbox.trash');
     Route::get('/mailbox/{folder}/{id}', Show::class)->name('mailbox.show');
 
-    Route::get('/testing', function() {
+    Route::get('/testing', function () {
         $cm = new ClientManager($options = []);
 
         $client = $cm->make([
-            'host'          => 'outlook.office365.com',
+            'host'          => Auth()->user()->imap_host,
             'port'          => 993,
             'encryption'    => 'tls',
             'validate_cert' => true,
@@ -58,10 +61,17 @@ Route::middleware([
 
         //Get all Mailboxes
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
-        $folder = $client->getFolders();
+        $folder = $client->getFolderByName('Inbox');
 
-        echo $folder;
+        // $messages = $folder->query()->getMessageByMsgn(1);
+        $messages = $folder->query()->all()->get()->reverse()->paginate(2);
+        $msgId = 0;
+        foreach ($messages as $message) {
+            $msgId = ($msgId < $message->uid) ? $message->uid : $msgId;
+        }
 
+        $message = $folder->query()->getMessage($msgId);
+
+        dd( $message);
     });
-
 });
