@@ -153,6 +153,7 @@ class IMAPIdleCommand extends Command
                 'from_email'    => $message->getFrom()[0]->mail,
                 'subject'       => $message->getSubject(),
                 'body'          => $message->getHTMLBody(true),
+                'type'          => 'inbox',
                 'user_id'       => $user->id,
             ]);
             $this->info('Email Added');

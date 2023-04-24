@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('subject');
             $table->longText('body');
             $table->integer('user_id');
+            $table->string('type');
             $table->timestamps();
         });
     }

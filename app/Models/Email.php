@@ -15,6 +15,7 @@ class Email extends Model
         'from_email',
         'subject',
         'body',
+        'type',
         'user_id',
     ];
 }

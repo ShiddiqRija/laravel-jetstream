@@ -34,9 +34,9 @@
                     <tbody class="bg-red">
                         @if($messages->count() > 0)
                         @foreach($messages as $message)
-                        <tr wire:click="openEmail('{{ $folder }}', {{ $message->uid }})" class="hover:bg-gray-300 cursor-pointer">
-                            <td class="px-2 py-2 font-medium text-sm w-2/12">{{ substr($message->getFrom()[0]->personal, 0, 19) . '.' }}</td>
-                            <td class="px-2 py-2 text-sm w-8/12">{!! substr($message->getSubject() . ' &nbsp;&ndash;&nbsp; <span class="text-gray-600">' . $message->mailText, 0, 140) . '...' . '</span>'!!}</td>
+                        <tr wire:click="openEmail('{{ $folder }}', {{ $message->id }})" class="hover:bg-gray-300 cursor-pointer">
+                            <td class="px-2 py-2 font-medium text-sm w-2/12">{{ substr($message->from_name, 0, 19) . '.' }}</td>
+                            <td class="px-2 py-2 text-sm w-8/12">{!! substr($message->subject . ' &nbsp;&ndash;&nbsp; <span class="text-gray-600">' . $message->mailText, 0, 140) . '...' . '</span>'!!}</td>
                             <td class="px-2 py-2 text-sm w-1/12 text-right">{{ $message->date }}</td>
                         </tr>
                         @endforeach
@@ -45,14 +45,16 @@
                             <td colspan="2" class="font-medium text-center text-large">No Email</td>
                         </tr>
                         @endif
+
                     </tbody>
                 </table>
 
             </div>
 
             <div class="py-4 ml-10">
-                {{$messages->links()}}
+                {{ $messages->links() }}
             </div>
+
         </div>
     </div>
 </div>
