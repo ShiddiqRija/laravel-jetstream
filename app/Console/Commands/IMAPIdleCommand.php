@@ -4,12 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Email;
 use App\Models\User;
-use App\Services\ReactPHPFolder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use React\EventLoop\Factory;
-use React\Socket\Server;
-use Webklex\PHPIMAP\Client;
 use Webklex\PHPIMAP\ClientManager;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
 use Webklex\PHPIMAP\Exceptions\FolderFetchingException;
@@ -36,42 +32,59 @@ class IMAPIdleCommand extends Command
      */
     public function handle()
     {
-        while (true) {
+        Log::info('Try Run');
+        $users = User::all();
 
-            $users = User::all();
+        foreach ($users as $user) {
+            $cm = new ClientManager($options = []);
 
-            foreach ($users as $user) {
-                $cm = new ClientManager($options = []);
+            $client = $cm->make([
+                'host'          => $user->imap_host,
+                'port'          => 993,
+                'encryption'    => 'tls',
+                'validate_cert' => true,
+                'username'      => $user->email,
+                'password'      => $user->imap_password,
+                'protocol'      => 'imap'
+            ]);
 
-                $client = $cm->make([
-                    'host'          => $user->imap_host,
-                    'port'          => 993,
-                    'encryption'    => 'tls',
-                    'validate_cert' => true,
-                    'username'      => $user->email,
-                    'password'      => $user->imap_password,
-                    'protocol'      => 'imap'
-                ]);
-
+            try {
                 $client->connect();
+            } catch (ConnectionFailedException $e) {
+                Log::error($e->getMessage());
+                return 1;
+            }
 
-                $folder = $client->getFolderByName('Inbox');
+            // $folder = $client->getFolderByName('Inbox');
 
-                $messages = $folder->query()->all()->get()->reverse()->paginate(2);
-                $msgId = 0;
+            /** @var Folder $folder */
+            try {
+                $folder = $client->getFolder('Inbox');
+            } catch (ConnectionFailedException $e) {
+                Log::error($e->getMessage());
+                return 1;
+            } catch (FolderFetchingException $e) {
+                Log::error($e->getMessage());
+                return 1;
+            }
 
-                foreach ($messages as $message) {
-                    $msgId = ($msgId < $message->uid) ? $message->uid : $msgId;
+            $messages = $folder->query()->all()->get()->reverse()->paginate(1);
+            $msgId = 0;
 
-                    $message = $folder->query()->getMessage($msgId);
+            foreach ($messages as $message) {
+                $msgId = ($msgId < $message->uid) ? $message->uid : $msgId;
 
-                    if ($this->checkData($message->uid, $user->id)) {
-                        $this->store($message, $user);
-                    }
+                $message = $folder->query()->getMessage($msgId);
+
+                if ($this->checkData($message->uid, $user->id)) {
+                    $this->store($message, $user);
                 }
             }
+
+            $client->disconnect();
         }
 
+        return;
 
         // $cm = new ClientManager($options = []);
 
@@ -137,7 +150,7 @@ class IMAPIdleCommand extends Command
         $checking = Email::where('id', $id)->where('user_id', $userId)->first();
 
         if ($checking) {
-            $this->info('Email exists in user id : ' . $userId);
+            Log::info('Email exists in user id : ' . $userId);
             return false;
         }
 
@@ -156,9 +169,9 @@ class IMAPIdleCommand extends Command
                 'type'          => 'inbox',
                 'user_id'       => $user->id,
             ]);
-            $this->info('Email Added');
+            Log::info('Email Added');
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            Log::info($e->getMessage());
         }
     }
 }

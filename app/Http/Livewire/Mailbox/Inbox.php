@@ -10,12 +10,20 @@ use Webklex\PHPIMAP\ClientManager;
 
 class Inbox extends Component
 {
+
+    protected $message;
+
     public function render()
     {
         return view('livewire.mailbox.index', [
-            'messages' => $this->getEmail(),
+            'messages' => $this->message,
             'folder' => 'inbox'
         ]);
+    }
+
+    public function boot()
+    {
+        $this->getEmail();
     }
 
     public function getEmail()
@@ -30,7 +38,7 @@ class Inbox extends Component
             $email->date = Carbon::createFromFormat('Y-m-d H:i:s', $email->date)->format('d M');
         }
 
-        return $userEmail;
+        $this->message = $userEmail;
     }
 
     // public function getMail()

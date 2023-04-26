@@ -39,8 +39,17 @@ Route::middleware([
     Route::get('/mailbox/{folder}/{id}', Show::class)->name('mailbox.show');
 
     Route::get('/testing', function () {    
-        $message = Email::where('user_id', Auth()->user()->id)->orderByDesc('id')->paginate(5);
+        $userEmail = Email::where('user_id', Auth()->user()->id)->where('type', 'inbox')->get()->count();
 
-        dd( $message);
+        // foreach ($userEmail as $email) {
+        //     $email->mailText = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '',  $email->body);
+        //     $email->mailText = strip_tags($email->mailText);
+
+        //     $email->date = $email->created_at;
+        //     $email->date = Carbon::createFromFormat('Y-m-d H:i:s', $email->date)->format('d M');
+        // }
+
+        
+        dd($userEmail);
     });
 });
