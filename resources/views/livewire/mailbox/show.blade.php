@@ -8,7 +8,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex">
         <div class="w-1/6">
             <div class="grid">
-                <a href="email-compose.html" class="bg-indigo-500 text-white rounded py-2 px-4 font-semibold">Compose</a>
+                <a href="{{ route('mailbox.compose') }}" class="bg-indigo-500 text-white rounded py-2 px-4 font-semibold">Compose</a>
             </div>
 
             <div class="mt-3">
