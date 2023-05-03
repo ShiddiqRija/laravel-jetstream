@@ -44,24 +44,5 @@ Route::middleware([
     Route::get('/mailbox/{folder}/{id}', Show::class)->name('mailbox.show');
 
     Route::get('/testing', function () {
-        $cm = new ClientManager($options = []);
-
-        $client = $cm->make([
-            'host'          => Auth()->user()->imap_host,
-            'port'          => 993,
-            'encryption'    => 'tls',
-            'validate_cert' => true,
-            'username'      => Auth()->user()->email,
-            'password'      => Auth()->user()->imap_password,
-            'protocol'      => 'imap'
-        ]);
-
-        $client->connect();
-
-        $folder = $client->getFolder('Sent');
-
-        $messages = $folder->query()->all()->get()->reverse()->paginate(1);
-
-        dd($messages);
     });
 });

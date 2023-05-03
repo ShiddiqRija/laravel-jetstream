@@ -16,7 +16,7 @@ class Show extends Component
 
     public function mount($folder, $id)
     {
-        $userEmail = Email::where('id', $id)->where('user_id', Auth()->user()->id)->first();
+        $userEmail = Email::where('id', $id)->where('user_id', Auth()->user()->id)->where('type', $folder)->first();
 
         // Pencocokan pola untuk tag HTML dan tag style/CSS
         preg_match_all('/<html.*?>(.*?)<\/html>|<style.*?>(.*?)<\/style>/s', $userEmail->body, $matches); 

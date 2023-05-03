@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Mailbox;
 
+use App\Models\Email;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -22,9 +24,20 @@ class Compose extends Component
     public function send()
     {
         try {
+            $data = [
+                'driver' => 'smtp',
+                'host' => 'smtp.office365.com',
+                'port' => 587,
+                'encryption' => 'tls',
+                'username' => Auth()->user()->email,
+                'password' => Auth()->user()->imap_password,
+            ];
+
+            Config::set('mail', $data);
+
             $body = array('body' => $this->body);
 
-            Mail::send(['text' => 'mail'], $body, function ($message) {
+            Mail::send(['html' => 'mail'], $body, function ($message) {
                 $message->to($this->email)->subject($this->subject);
                 $message->from(Auth()->user()->email, Auth()->user()->name);
             });
@@ -53,7 +66,7 @@ class Compose extends Component
             $msgId = ($msgId < $message->uid) ? $message->uid : $msgId;
 
             $message = $folder->query()->getMessage($msgId);
-            
+
             $this->store($message, Auth()->user()->id);
         }
 
@@ -62,6 +75,20 @@ class Compose extends Component
 
     public function store(Message $message, $user)
     {
-        # code...
+        try {
+            Email::create([
+                'id'            => $message->uid,
+                'from_name'     => $message->getFrom()[0]->personal,
+                'from_email'    => $message->getFrom()[0]->mail,
+                'subject'       => $message->getSubject(),
+                'body'          => $message->getHTMLBody(true),
+                'type'          => 'sent-mail',
+                'user_id'       => $user,
+            ]);
+            $url = route('mailbox.send-mail');
+            return redirect()->to($url);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 }
