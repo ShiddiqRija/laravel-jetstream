@@ -9,6 +9,8 @@ use Webklex\PHPIMAP\ClientManager;
 
 class Show extends Component
 {
+    private $mailId = 0;
+    private $folder = '';
     private $subject = '';
     private $sender = '';
     private $htmlEmail = '';
@@ -25,6 +27,8 @@ class Show extends Component
         $htmlContent = $matches[1] != null ? $matches[1][0] : $userEmail->body;
         $cssContent = $matches[2] != null ? $matches[1][0] : '';
 
+        $this->mailId = $userEmail->id;
+        $this->folder = $folder;
         $this->subject = $userEmail->subject;
         $this->sender = $userEmail->from_name . '< ' . $userEmail->from_email . ' >';
         $this->htmlEmail = $htmlContent;
@@ -75,6 +79,8 @@ class Show extends Component
     public function render()
     {
         return view('livewire.mailbox.show', [
+            'id' => $this->mailId,
+            'folder' => $this->folder,
             'subject' => $this->subject,
             'sender' => $this->sender,
             'htmlEmail' => $this->htmlEmail,
